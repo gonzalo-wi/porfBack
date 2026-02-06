@@ -1,0 +1,149 @@
+/* Professional Backend System Background
+   Microservices grid, API nodes, data flow visualization
+   Clean-themed, visible but not distracting */
+
+:root {
+  --sb-bg-base: #0a0f1a;           /* Deep professional blue-black */
+  --sb-grid-color: #3b82f6;        /* Blue grid lines */
+  --sb-grid-opacity: 0.08;         /* Subtle but visible */
+  --sb-pulse-color: rgba(59, 130, 246, 0.12);  /* Gentle pulse */
+  --sb-node-opacity: 0.4;          /* Subtle service nodes */
+  --sb-flow-opacity: 0.25;         /* Subtle data flow */
+  --sb-animation-speed: 24s;       /* Slow, professional animations */
+}
+
+/* Base full-viewport layer */
+.system-bg-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  animation: sb-fade-in 1s ease-out;
+}
+
+/* Microservices Infrastructure Grid - clearly visible */
+.infrastructure-grid {
+  background-color: var(--sb-bg-base);
+  background-image:
+    /* Major grid - 80px */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 79px,
+      var(--sb-grid-color) 79px,
+      var(--sb-grid-color) 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 79px,
+      var(--sb-grid-color) 79px,
+      var(--sb-grid-color) 80px
+    );
+  opacity: var(--sb-grid-opacity);
+  animation: sb-grid-breathe calc(var(--sb-animation-speed) * 2) ease-in-out infinite;
+}
+
+/* Health check pulse - like monitoring dashboards */
+.pulse-overlay {
+  background: radial-gradient(
+    ellipse 800px 600px at 0% 0%,
+    var(--sb-pulse-color) 0%,
+    transparent 50%
+  );
+  animation: sb-pulse-sweep var(--sb-animation-speed) ease-in-out infinite;
+}
+
+
+/* Extra data-flow hints for Tech view */
+.data-flow-layer {
+  background-image:
+    /* Horizontal flow tracks - más frecuentes */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 120px,
+      rgba(59, 130, 246, var(--sb-flow-opacity)) 120px,
+      rgba(59, 130, 246, var(--sb-flow-opacity)) 122px,
+      transparent 122px,
+      transparent 240px
+    ),
+    /* Vertical flow tracks - más frecuentes */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 120px,
+      rgba(139, 92, 246, var(--sb-flow-opacity)) 120px,
+      rgba(139, 92, 246, var(--sb-flow-opacity)) 122px,
+      transparent 122px,
+      transparent 240px
+    );
+  background-size: 240px 240px, 240px 240px;
+  animation: sb-flow-move calc(var(--sb-animation-speed) * 1.5) linear infinite;
+}
+
+/* Subtle system “nodes” glow for Tech view */
+.system-nodes {
+  background-image:
+    radial-gradient(circle at 15% 18%, rgba(16, 185, 129, 0.18) 0, transparent 2.2%),
+    radial-gradient(circle at 42% 32%, rgba(59, 130, 246, 0.14) 0, transparent 2%),
+    radial-gradient(circle at 68% 22%, rgba(139, 92, 246, 0.14) 0, transparent 2%),
+    radial-gradient(circle at 23% 74%, rgba(16, 185, 129, 0.16) 0, transparent 2.3%),
+    radial-gradient(circle at 78% 78%, rgba(59, 130, 246, 0.15) 0, transparent 2.3%);
+  animation: sb-nodes-pulse calc(var(--sb-animation-speed) * 0.7) ease-in-out infinite alternate;
+}
+
+/* ==== Keyframes ==== */
+@keyframes sb-grid-breathe {
+  0%, 100% {
+    opacity: var(--sb-grid-opacity);
+  }
+  50% {
+    opacity: calc(var(--sb-grid-opacity) * 1.5);
+  }
+}
+
+@keyframes sb-pulse-sweep {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes sb-flow-move {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 0 240px, 240px 0; }
+}
+
+@keyframes sb-nodes-pulse {
+  0% { opacity: var(--sb-node-opacity); }
+  100% { opacity: calc(var(--sb-node-opacity) * 1.4); }
+}
+
+@keyframes sb-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .infrastructure-grid,
+  .pulse-overlay,
+  .data-flow-layer,
+  .system-nodes {
+    animation: none !important;
+  }
+}
+
+/* Dark mode tuning (if system dark) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sb-grid-opacity: 0.06;       /* Slightly dimmer in dark mode */
+    --sb-node-opacity: 0.35;       /* Slightly dimmer in dark mode */
+  }
+}

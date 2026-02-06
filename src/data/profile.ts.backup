@@ -1,0 +1,381 @@
+export interface Profile {
+  name: string;
+  nickname: string;
+  role: string;
+  tagline: string;
+  bio: string;
+  stack: string[];
+  contact: {
+    email: string;
+    github: string;
+    linkedin: string;
+  };
+}
+
+export interface Metric {
+  label: string;
+  value: string;
+  description: string;
+  icon: string;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  problem: string;
+  solution: string;
+  outcome: string;
+  stack: string[];
+  links: {
+    github?: string;
+    live?: string;
+  };
+  architecture?: string;
+  // Tech Lead View - Advanced details
+  designDecisions?: {
+    title: string;
+    rationale: string;
+  }[];
+  tradeoffs?: string[];
+  technicalNotes?: string;
+}
+
+export interface Incident {
+  id: string;
+  severity: 'SEV-1' | 'SEV-2' | 'SEV-3';
+  title: string;
+  symptom: string;
+  rootCause: string;
+  fix: string;
+  prevention: string;
+  timestamp: string;
+  // Tech Lead View - Technical depth
+  technicalDetails?: string;
+  toolsUsed?: string[];
+}
+
+export interface Playbook {
+  category: string;
+  skills: string[];
+  tools: string[];
+}
+
+export interface Experience {
+  id: string;
+  role: string;
+  company: string;
+  period: string;
+  responsibilities: string[];
+  impact: string;
+  // Tech Lead View - Technical context
+  technicalContext?: {
+    architecture: string;
+    scale: string;
+    challenges: string[];
+  };
+}
+
+export const profile: Profile = {
+  name: 'Gonzalo Wiñazki',
+  nickname: 'Gonza',
+  role: 'Backend Developer / IT Systems Analyst',
+  tagline: 'I build systems that don\'t break.',
+  bio: 'Backend engineer specialized in building reliable APIs, integrations, and automation pipelines. I ship systems with an infra-minded approach—monitoring, logging, and operational excellence built in from day one.',
+  stack: ['Java', 'Spring Boot', 'Go', 'Python', 'FastAPI', 'REST APIs', 'SQL', 'Docker'],
+  contact: {
+    email: 'gonzalo@example.com',
+    github: 'https://github.com/gonzalowinazki',
+    linkedin: 'https://linkedin.com/in/gonzalowinazki',
+  },
+};
+
+export const metrics: Metric[] = [
+  {
+    label: 'Time Saved',
+    value: '~80%',
+    description: 'Operational time reduction through automation',
+    icon: '⚡',
+  },
+  {
+    label: 'APIs Shipped',
+    value: '12+',
+    description: 'Production-grade REST APIs deployed',
+    icon: '🚀',
+  },
+  {
+    label: 'Systems Integrated',
+    value: '8+',
+    description: 'External & internal service integrations',
+    icon: '🔗',
+  },
+  {
+    label: 'Uptime Focus',
+    value: '99.9%',
+    description: 'Reliability-first engineering mindset',
+    icon: '✓',
+  },
+];
+
+export const projects: Project[] = [
+  {
+    id: 'api-gateway',
+    title: 'Enterprise API Gateway',
+    problem: 'Multiple internal services needed unified authentication, rate limiting, and request routing without duplicating logic.',
+    solution: 'Built a centralized API gateway in Go with JWT validation, Redis-backed rate limiting, and dynamic routing configuration.',
+    outcome: 'Reduced auth implementation time by 70% for new services. Handled 10K+ req/min with p99 latency < 50ms.',
+    stack: ['Go', 'Redis', 'Docker', 'JWT', 'PostgreSQL'],
+    links: {
+      github: '#',
+    },
+    architecture: 'gateway',
+    designDecisions: [
+      {
+        title: 'Why Go over Node.js',
+        rationale: 'Chose Go for better concurrency handling (goroutines vs event loop), lower memory footprint (~50MB vs ~200MB under load), and built-in HTTP/2 support. Go's static typing caught routing bugs at compile time.',
+      },
+      {
+        title: 'Redis for rate limiting',
+        rationale: 'Sliding window algorithm with Redis sorted sets. Evaluated token bucket in-memory but needed cross-instance coordination. Redis ZREMRANGEBYSCORE gave atomic cleanup of expired entries.',
+      },
+      {
+        title: 'Hot-reload config without restarts',
+        rationale: 'Implemented config watcher with atomic pointer swap. Routes load from PostgreSQL, cached in memory, refreshed every 30s. Zero-downtime route updates critical for multi-team environment.',
+      },
+    ],
+    tradeoffs: [
+      'Single point of failure (mitigated with 3-node deployment + health checks)',
+      'Added ~20ms latency overhead (acceptable for our use case)',
+      'More complex debugging (distributed tracing with correlation IDs)',
+    ],
+    technicalNotes: 'Used middleware chain pattern for extensibility. Circuit breaker per upstream service (gobreaker lib). Prometheus metrics at /metrics endpoint. Request/response logging via structured JSON to stdout → Elasticsearch.',
+  },
+  {
+    id: 'automation-pipeline',
+    title: 'Data Sync Automation',
+    problem: 'Manual data reconciliation between CRM and ERP took 4+ hours daily, error-prone and blocking operations.',
+    solution: 'Developed FastAPI service with scheduled jobs, webhook listeners, and retry logic. Integrated with both systems via REST APIs.',
+    outcome: '~85% time reduction, zero manual interventions. Processed 50K+ records daily with automatic error recovery.',
+    stack: ['Python', 'FastAPI', 'Celery', 'PostgreSQL', 'Docker'],
+    links: {
+      github: '#',
+    },
+    architecture: 'pipeline',
+    designDecisions: [
+      {
+        title: 'Celery over direct async',
+        rationale: 'Needed persistent task queue for reliability. Celery with Redis backend gave us retry logic, task prioritization, and monitoring (Flower). asyncio alone wouldn't survive process crashes.',
+      },
+      {
+        title: 'Idempotency by design',
+        rationale: 'Every sync operation checks record hash before updating. Used PostgreSQL UPSERT with conflict resolution. Webhooks can fire multiple times—idempotent handlers prevent duplicate processing.',
+      },
+      {
+        title: 'Incremental sync windows',
+        rationale: 'Full sync takes 2+ hours. Implemented change tracking with last_modified timestamps. Only sync records changed since last run. Full sync runs weekly as reconciliation safety net.',
+      },
+    ],
+    tradeoffs: [
+      'Eventual consistency (3-5 min sync lag, documented with business)',
+      'Redis dependency for Celery (added monitoring)',
+      'Complex error handling logic (38% of codebase)',
+    ],
+    technicalNotes: 'Dead letter queue for failed syncs (manual review). Exponential backoff with jitter (prevents thundering herd). SQLAlchemy with connection pooling. Alembic migrations. Pydantic models for validation at API boundary.',
+  },
+  {
+    id: 'monitoring-dashboard',
+    title: 'Ops Monitoring Backend',
+    problem: 'No centralized visibility into microservices health, logs scattered across systems, incidents detected too late.',
+    solution: 'Built Spring Boot service aggregating metrics from multiple sources, exposing real-time WebSocket API for dashboard.',
+    outcome: 'Mean time to detection (MTTD) reduced from 45min to <5min. Full system visibility in single dashboard.',
+    stack: ['Java', 'Spring Boot', 'WebSocket', 'InfluxDB', 'Grafana'],
+    links: {
+      github: '#',
+      live: '#',
+    },
+    architecture: 'monitoring',
+    designDecisions: [
+      {
+        title: 'InfluxDB over Prometheus',
+        rationale: 'Needed longer retention (90 days) with downsampling. InfluxDB's continuous queries aggregate 5-second data to 1-minute after 24h, 5-minute after 7 days. Prometheus retention costly at our scale.',
+      },
+      {
+        title: 'WebSocket push vs HTTP polling',
+        rationale: 'Dashboard needs real-time updates (<5s latency). WebSocket eliminates polling overhead. STOMP protocol over WebSocket for pub/sub. Fallback to long-polling for old browsers.',
+      },
+      {
+        title: 'Metric aggregation strategy',
+        rationale: 'Pre-aggregate in backend, not browser. Dashboard requests "service health" → backend queries 15 metrics, applies business logic, returns single status. Reduces browser load, centralizes logic.',
+      },
+    ],
+    tradeoffs: [
+      'WebSocket connection limits (scaled to 3 backend instances)',
+      'InfluxDB learning curve (InfluxQL vs SQL)',
+      'Grafana dependency (could eliminate but mature tool)',
+    ],
+    technicalNotes: 'Spring WebSocket with SockJS. Scheduled tasks (@Scheduled) poll services every 30s. CompletableFuture for async metric collection. Micrometer for internal metrics. Logback with JSON encoder.',
+  },
+  {
+    id: 'internal-tool',
+    title: 'Developer Onboarding Tool',
+    problem: 'New developers spent 3+ days setting up environments, credentials, and understanding system architecture.',
+    solution: 'Created CLI tool in Go automating environment setup, credential provisioning, and generating architecture docs from codebases.',
+    outcome: 'Onboarding time reduced to <4 hours. Adopted by 20+ developers, 95% satisfaction rating.',
+    stack: ['Go', 'Docker', 'Shell', 'REST APIs'],
+    links: {
+      github: '#',
+    },
+    architecture: 'tool',
+    designDecisions: [
+      {
+        title: 'CLI over web UI',
+        rationale: 'Developers live in terminal. CLI scriptable (CI/CD integration). Cobra framework gave us subcommands, flags, auto-completion. Web UI adds deployment/maintenance overhead.',
+      },
+      {
+        title: 'Docker for environment isolation',
+        rationale: 'Tool provisions Docker Compose stacks per project. Eliminates "works on my machine." Versions locked in compose files. Developers get identical environments.',
+      },
+      {
+        title: 'Architecture doc generation',
+        rationale: 'Parses Git repos for service dependencies (imports, API calls). Generates Mermaid diagrams. Docs in Markdown (Git-versioned). Auto-update on commit hooks.',
+      },
+    ],
+    tradeoffs: [
+      'Docker prerequisite (most devs had it)',
+      'Limited Windows support initially (WSL2 workaround)',
+      'Generated docs need manual refinement (~10% cases)',
+    ],
+    technicalNotes: 'Used Viper for config management. Vault API for secrets (short-lived tokens). Parallel execution with errgroup. Colorized output with fatih/color. Homebrew tap for installation.',
+  },
+];
+
+export const incidents: Incident[] = [
+  {
+    id: 'inc-001',
+    severity: 'SEV-1',
+    title: 'Payment Gateway Integration Timeout',
+    symptom: 'Payment confirmations failing at 15% rate during peak hours. Users experiencing checkout failures.',
+    rootCause: 'Third-party API had undocumented rate limits. Our retry logic was naive, amplifying the problem.',
+    fix: 'Implemented exponential backoff with jitter, circuit breaker pattern, and request queuing with Redis.',
+    prevention: 'Added comprehensive load testing, monitoring for external API latency, automatic failover to backup processor.',
+    timestamp: '2024-Q4',
+  },
+  {
+    id: 'inc-002',
+    severity: 'SEV-2',
+    title: 'Data Mismatch in Analytics Pipeline',
+    symptom: 'Dashboard reporting 30% lower transaction volumes than actual. Finance team flagged discrepancy.',
+    rootCause: 'Timezone handling inconsistency between data ingestion (UTC) and aggregation queries (local time).',
+    fix: 'Standardized all timestamps to UTC at ingestion, added validation layer checking record counts at each stage.',
+    prevention: 'Created automated reconciliation jobs, added data quality metrics to monitoring, documented timezone standards.',
+    timestamp: '2024-Q3',
+  },
+  {
+    id: 'inc-003',
+    severity: 'SEV-2',
+    title: 'Memory Leak in Background Workers',
+    symptom: 'Worker pods restarting every 6 hours, processing delays accumulating, OOM kills in logs.',
+    rootCause: 'Database connection pool not properly closed after batch jobs. Connections accumulated over time.',
+    fix: 'Implemented proper connection lifecycle management, added memory profiling, reduced pool size.',
+    prevention: 'Set up memory usage alerts, added connection pool metrics to dashboards, scheduled restarts as safety net.',
+    timestamp: '2024-Q2',
+  },
+  {
+    id: 'inc-004',
+    severity: 'SEV-3',
+    title: 'API Performance Degradation',
+    symptom: 'Response times increased from 200ms to 2s+ over 2 weeks. No obvious spike in traffic.',
+    rootCause: 'Unindexed database queries as table grew past 1M rows. Query planner choosing full table scans.',
+    fix: 'Added composite indexes on frequently queried columns, optimized N+1 queries, implemented query result caching.',
+    prevention: 'Set up slow query logging, added database performance to monitoring, scheduled monthly query reviews.',
+    timestamp: '2024-Q1',
+  },
+];
+
+export const playbooks: Playbook[] = [
+  {
+    category: 'API Design',
+    skills: [
+      'RESTful architecture',
+      'OpenAPI/Swagger documentation',
+      'Versioning strategies',
+      'Rate limiting & throttling',
+      'Error handling patterns',
+    ],
+    tools: ['Spring Boot', 'FastAPI', 'Go Gin', 'Postman', 'Swagger'],
+  },
+  {
+    category: 'Data',
+    skills: [
+      'Database design & optimization',
+      'SQL query tuning',
+      'Data modeling',
+      'ETL pipelines',
+      'Cache strategies (Redis)',
+    ],
+    tools: ['PostgreSQL', 'MySQL', 'Redis', 'InfluxDB', 'Flyway'],
+  },
+  {
+    category: 'Reliability',
+    skills: [
+      'Health checks & monitoring',
+      'Logging & observability',
+      'Circuit breaker patterns',
+      'Retry logic & backoff',
+      'Graceful degradation',
+    ],
+    tools: ['Prometheus', 'Grafana', 'ELK Stack', 'Docker', 'Kubernetes basics'],
+  },
+  {
+    category: 'Security Basics',
+    skills: [
+      'JWT authentication',
+      'OAuth 2.0 flows',
+      'Input validation',
+      'SQL injection prevention',
+      'Secrets management',
+    ],
+    tools: ['Spring Security', 'Vault', 'Auth0', 'OWASP guidelines'],
+  },
+  {
+    category: 'Tooling',
+    skills: [
+      'CI/CD pipelines',
+      'Docker containerization',
+      'Git workflows',
+      'Automated testing',
+      'Shell scripting',
+    ],
+    tools: ['Git', 'Docker', 'GitHub Actions', 'JUnit', 'pytest', 'bash/zsh'],
+  },
+];
+
+export const experiences: Experience[] = [
+  {
+    id: 'exp-001',
+    role: 'Backend Developer',
+    company: 'Current Role',
+    period: '2023 - Present',
+    responsibilities: [
+      'Design and implement REST APIs serving 100K+ daily requests with Spring Boot and Go',
+      'Build integration layers connecting internal systems with third-party services',
+      'Automate operational workflows, reducing manual processing time by 80%',
+      'Maintain production systems with focus on reliability, monitoring, and incident response',
+      'Collaborate with frontend and DevOps teams on full-stack feature delivery',
+    ],
+    impact: 'Shipped 8+ production services handling critical business operations. Zero major incidents in last 6 months.',
+  },
+  {
+    id: 'exp-002',
+    role: 'IT Systems Analyst',
+    company: 'Previous Projects',
+    period: '2021 - 2023',
+    responsibilities: [
+      'Analyzed system requirements and designed technical solutions',
+      'Developed internal tools and automation scripts with Python',
+      'Managed databases, optimized queries, and maintained data integrity',
+      'Created documentation and provided technical support',
+      'Participated in code reviews and knowledge sharing sessions',
+    ],
+    impact: 'Improved system efficiency across multiple departments. Recognized for problem-solving and reliability focus.',
+  },
+];
