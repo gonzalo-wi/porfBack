@@ -1,209 +1,294 @@
 <template>
-  <header class="sticky top-0 z-50 bg-white/80 dark:bg-console-bg/80 backdrop-blur-2xl border-b border-gray-200/50 dark:border-console-border/50 shadow-lg">
-    <nav class="section-container py-3">
-      <div class="flex items-center justify-between gap-8">
-        <!-- Logo Mejorado con animación -->
-        <a href="#" class="flex items-center gap-3 group shrink-0 relative">
-          <!-- Círculo de estado con efecto glow -->
-          <div class="relative">
-            <div class="w-2.5 h-2.5 rounded-full bg-console-success animate-pulse shadow-lg shadow-console-success/50"></div>
-            <div class="absolute inset-0 w-2.5 h-2.5 rounded-full bg-console-success animate-ping"></div>
-          </div>
-          
-          <!-- Nombre con hover effect -->
-          <span class="text-xl font-bold tracking-tight">
-            <span class="text-gray-900 dark:text-white transition-all group-hover:text-console-primary">Gonzalo </span>
-            <span class="text-console-primary group-hover:text-console-accent transition-all">Wiñazki</span>
-          </span>
-          
-          <!-- Underline animado -->
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-console-primary to-console-accent transition-all duration-300 group-hover:w-full"></span>
-        </a>
+  <header class="sticky top-0 z-50">
+    <!-- Scroll progress bar -->
+    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gray-200/50 dark:bg-console-border/30 z-10">
+      <div
+        class="h-full bg-gradient-to-r from-console-primary to-console-accent transition-none"
+        :style="{ width: `${scrollProgress}%` }"
+      ></div>
+    </div>
 
-        <!-- Desktop Navigation - Mejorada con pills -->
-        <div class="hidden md:flex items-center gap-2 flex-1 justify-center">
-          <a
-            v-for="link in navLinks"
-            :key="link.href"
-            :href="link.href"
-            class="relative px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 
-                   rounded-lg transition-all duration-200 group/nav
-                   hover:text-console-primary dark:hover:text-console-primary
-                   hover:bg-console-primary/10 dark:hover:bg-console-primary/20"
-          >
-            {{ t(`nav.${link.key}`) }}
-            <!-- Dot indicator on hover -->
-            <span class="absolute top-1 right-1 w-1 h-1 rounded-full bg-console-primary opacity-0 group-hover/nav:opacity-100 transition-opacity"></span>
-          </a>
-        </div>
+    <div class="bg-white/90 dark:bg-console-bg/90 backdrop-blur-xl border-b border-gray-200/60 dark:border-console-border/60">
+      <nav class="section-container">
+        <div class="flex items-center justify-between gap-4 h-14">
 
-        <!-- Right Side Actions - Agrupadas con mejor diseño -->
-        <div class="flex items-center gap-2 shrink-0">
-          <!-- ViewToggle -->
-          <ViewToggle class="hidden lg:flex" />
-          
-          <!-- Toggles en grupo con separador -->
-          <div class="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-gray-100/50 dark:bg-console-surface/50 border border-gray-200/50 dark:border-console-border/50">
-            <LanguageToggle />
-            <div class="w-px h-5 bg-gray-300 dark:bg-gray-600"></div>
-            <ThemeToggle />
-          </div>
-          
-          <!-- CV Button mejorado con badge -->
-          <a
-            href="#deploy"
-            class="hidden sm:flex items-center gap-2 px-5 py-2.5 
-                   bg-console-success text-white font-semibold rounded-lg 
-                   border-2 border-console-success
-                   hover:bg-console-success/90 hover:border-emerald-400
-                   hover:shadow-xl hover:shadow-console-success/40 hover:scale-105 active:scale-95 
-                   transition-all duration-200 group relative overflow-hidden"
-          >
-            <!-- Shine effect on hover -->
-            <span class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></span>
-            
-            <svg class="w-4 h-4 group-hover:animate-bounce relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span class="relative z-10">CV</span>
-            
-            <!-- Pulse badge -->
-            <span class="absolute -top-1 -right-1 flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-white/90"></span>
+          <!-- Logo -->
+          <a href="#" class="flex items-center gap-2.5 shrink-0 group">
+            <div class="relative flex items-center justify-center w-2 h-2">
+              <div class="absolute inset-0 rounded-full bg-console-success animate-ping opacity-50"></div>
+              <div class="relative w-2 h-2 rounded-full bg-console-success"></div>
+            </div>
+            <span class="text-[15px] font-bold tracking-tight">
+              <span class="text-gray-900 dark:text-white">Gonzalo</span>
+              <span class="text-console-primary"> Wiñazki</span>
             </span>
           </a>
 
-          <!-- Mobile: Toggles + Menu Button Mejorado -->
-          <div class="flex sm:hidden items-center gap-1.5">
-            <!-- Toggles en grupo -->
-            <div class="flex items-center gap-1 px-1.5 py-1 rounded-lg bg-gray-100/50 dark:bg-console-surface/50 border border-gray-200/50 dark:border-console-border/50">
-              <LanguageToggle />
-              <div class="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
-              <ThemeToggle />
+          <!-- Desktop center: nav links -->
+          <div class="hidden md:flex items-center gap-0.5 flex-1 justify-center">
+            <a
+              v-for="link in navLinks"
+              :key="link.href"
+              :href="link.href"
+              :class="[
+                'relative px-3.5 py-1.5 text-sm font-medium rounded-md transition-all duration-150',
+                activeSection === link.section
+                  ? 'text-console-primary dark:text-console-primary'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-console-surface/70'
+              ]"
+            >
+              {{ t(`nav.${link.key}`) }}
+              <!-- Active underline -->
+              <span
+                v-if="activeSection === link.section"
+                class="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-console-primary"
+              ></span>
+            </a>
+          </div>
+
+          <!-- Desktop right actions -->
+          <div class="hidden md:flex items-center gap-2 shrink-0">
+
+            <!-- View mode segmented control -->
+            <div class="flex items-center rounded-lg border border-gray-200 dark:border-console-border bg-gray-100/60 dark:bg-console-surface/60 p-0.5 gap-0.5">
+              <button
+                @click="setView('recruiter')"
+                :class="[
+                  'px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-150',
+                  isRecruiterView
+                    ? 'bg-white dark:bg-console-bg text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                ]"
+              >
+                {{ t('viewToggle.recruiterShort') }}
+              </button>
+              <button
+                @click="setView('techLead')"
+                :class="[
+                  'px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-150',
+                  isTechLeadView
+                    ? 'bg-white dark:bg-console-bg text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                ]"
+              >
+                {{ t('viewToggle.techLeadShort') }}
+              </button>
             </div>
-            
-            <!-- Hamburger button mejorado -->
+
+            <!-- Divider -->
+            <div class="w-px h-5 bg-gray-200 dark:bg-console-border"></div>
+
+            <!-- Language toggle -->
+            <button
+              @click="toggleLanguage"
+              class="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-console-surface transition-all duration-150"
+              :aria-label="`Switch to ${locale === 'en' ? 'Spanish' : 'English'}`"
+            >
+              <span class="font-mono text-xs font-semibold tracking-wider">{{ locale === 'en' ? 'ES' : 'EN' }}</span>
+            </button>
+
+            <!-- Theme toggle -->
+            <button
+              @click="toggleTheme"
+              class="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-console-surface transition-all duration-150"
+              aria-label="Toggle theme"
+            >
+              <!-- Sun -->
+              <svg v-if="isDark" class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+              <!-- Moon -->
+              <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+              </svg>
+            </button>
+
+            <!-- Divider -->
+            <div class="w-px h-5 bg-gray-200 dark:bg-console-border"></div>
+
+            <!-- Contact CTA -->
+            <a
+              href="#deploy"
+              class="flex items-center gap-1.5 px-4 py-1.5
+                     bg-console-primary text-white text-sm font-semibold rounded-lg
+                     hover:bg-blue-500 transition-all duration-150
+                     shadow-sm hover:shadow-md hover:shadow-blue-500/20"
+            >
+              {{ t('nav.contact') }}
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Mobile right -->
+          <div class="flex md:hidden items-center gap-2">
+            <!-- Compact lang + theme -->
+            <div class="flex items-center gap-0.5 px-1.5 py-1 rounded-lg border border-gray-200/80 dark:border-console-border/80 bg-gray-100/60 dark:bg-console-surface/60">
+              <button
+                @click="toggleLanguage"
+                class="px-1.5 py-0.5 rounded text-xs font-mono font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >{{ locale === 'en' ? 'ES' : 'EN' }}</button>
+              <div class="w-px h-3 bg-gray-300 dark:bg-console-border"></div>
+              <button @click="toggleTheme" class="p-0.5 rounded text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <svg v-if="isDark" class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Hamburger -->
             <button
               @click="toggleMobileMenu"
-              class="p-2.5 rounded-lg hover:bg-console-primary/10 dark:hover:bg-console-primary/20 
-                     transition-all duration-200 group relative"
-              :class="{ 'bg-console-primary/10 dark:bg-console-primary/20': isMobileMenuOpen }"
+              class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-console-surface transition-colors"
               aria-label="Toggle menu"
             >
-              <svg class="w-5 h-5 transition-transform duration-300" :class="{ 'rotate-90': isMobileMenuOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  v-if="!isMobileMenuOpen"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-                <path
-                  v-else
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10"/>
+                <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
-              <!-- Indicator dot cuando está abierto -->
-              <span v-if="isMobileMenuOpen" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-console-primary"></span>
             </button>
           </div>
-        </div>
-      </div>
 
-      <!-- Mobile Menu Mejorado -->
+        </div>
+      </nav>
+
+      <!-- Mobile menu -->
       <Transition
-        enter-active-class="transition-all duration-300 ease-out"
+        enter-active-class="transition-all duration-200 ease-out"
         enter-from-class="opacity-0 -translate-y-2"
         enter-to-class="opacity-100 translate-y-0"
-        leave-active-class="transition-all duration-200 ease-in"
+        leave-active-class="transition-all duration-150 ease-in"
         leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 -translate-y-2"
       >
-        <div
-          v-if="isMobileMenuOpen"
-          class="md:hidden mt-4 py-4 border-t border-gray-200/50 dark:border-console-border/50"
-        >
-          <div class="flex flex-col gap-2">
-            <!-- ViewToggle con mejor espaciado -->
-            <div class="mb-2">
-              <ViewToggle />
+        <div v-if="isMobileMenuOpen" class="md:hidden border-t border-gray-200/60 dark:border-console-border/60">
+          <div class="section-container py-4 space-y-4">
+
+            <!-- View mode tabs mobile -->
+            <div class="flex items-center rounded-lg border border-gray-200 dark:border-console-border bg-gray-100/60 dark:bg-console-surface/60 p-0.5 gap-0.5 w-full">
+              <button
+                @click="setView('recruiter')"
+                :class="[
+                  'flex-1 py-2 text-xs font-semibold rounded-md transition-all duration-150 text-center',
+                  isRecruiterView
+                    ? 'bg-white dark:bg-console-bg text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400'
+                ]"
+              >{{ t('viewToggle.recruiter') }}</button>
+              <button
+                @click="setView('techLead')"
+                :class="[
+                  'flex-1 py-2 text-xs font-semibold rounded-md transition-all duration-150 text-center',
+                  isTechLeadView
+                    ? 'bg-white dark:bg-console-bg text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400'
+                ]"
+              >{{ t('viewToggle.techLead') }}</button>
             </div>
-            
-            <!-- Links con iconos -->
-            <a
-              v-for="(link, index) in navLinks"
-              :key="link.href"
-              :href="link.href"
-              @click="closeMobileMenu"
-              class="group px-4 py-3 rounded-xl text-base font-medium 
-                     text-gray-700 dark:text-gray-300 
-                     hover:text-console-primary dark:hover:text-console-primary 
-                     hover:bg-gradient-to-r hover:from-console-primary/10 hover:to-console-accent/10
-                     dark:hover:from-console-primary/20 dark:hover:to-console-accent/20
-                     transition-all duration-200 flex items-center justify-between"
-              :style="{ animationDelay: `${index * 50}ms` }"
-            >
-              <span>{{ t(`nav.${link.key}`) }}</span>
-              <svg class="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-            
-            <!-- Separador -->
-            <div class="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent my-2"></div>
-            
-            <!-- Mobile CV Button mejorado -->
+
+            <!-- Nav links -->
+            <div class="grid grid-cols-2 gap-1">
+              <a
+                v-for="link in navLinks"
+                :key="link.href"
+                :href="link.href"
+                @click="closeMobileMenu"
+                :class="[
+                  'px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                  activeSection === link.section
+                    ? 'bg-console-primary/10 dark:bg-console-primary/15 text-console-primary'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-console-surface'
+                ]"
+              >
+                {{ t(`nav.${link.key}`) }}
+              </a>
+            </div>
+
+            <!-- CTA -->
             <a
               href="#deploy"
               @click="closeMobileMenu"
-              class="flex items-center justify-center gap-2 px-5 py-3.5 
-                     bg-console-success text-white font-semibold rounded-xl 
-                     border-2 border-console-success
-                     hover:bg-console-success/90 hover:shadow-xl hover:shadow-console-success/40
-                     transition-all mt-2 group relative overflow-hidden"
+              class="flex items-center justify-center gap-2 w-full px-4 py-2.5
+                     bg-console-primary text-white text-sm font-semibold rounded-lg
+                     hover:bg-blue-500 transition-colors"
             >
-              <!-- Shine effect -->
-              <span class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></span>
-              
-              <svg class="w-5 h-5 group-hover:animate-bounce relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span class="relative z-10 font-bold">{{ t('nav.downloadCV') }}</span>
+              {{ t('nav.contact') }}
             </a>
           </div>
         </div>
       </Transition>
-    </nav>
+    </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import ThemeToggle from './ThemeToggle.vue';
-import LanguageToggle from './LanguageToggle.vue';
-import ViewToggle from './ViewToggle.vue';
+import { useViewMode } from '../composables/useViewMode';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
+const { isRecruiterView, isTechLeadView, setView } = useViewMode();
+
 const isMobileMenuOpen = ref(false);
+const isDark = ref(false);
+const scrollProgress = ref(0);
+const activeSection = ref('');
 
-// Simplified nav links - only essential sections
 const navLinks = [
-  { key: 'services', href: '#services' },
-  { key: 'incidents', href: '#incidents' },
-  { key: 'playbooks', href: '#playbooks' },
-  { key: 'contact', href: '#deploy' },
+  { key: 'services', href: '#services', section: 'services' },
+  { key: 'incidents', href: '#incidents', section: 'incidents' },
+  { key: 'playbooks', href: '#playbooks', section: 'playbooks' },
+  { key: 'contact', href: '#deploy', section: 'deploy' },
 ];
 
-const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+const toggleMobileMenu = () => { isMobileMenuOpen.value = !isMobileMenuOpen.value; };
+const closeMobileMenu = () => { isMobileMenuOpen.value = false; };
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value;
+  document.documentElement.classList.toggle('dark', isDark.value);
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
 };
 
-const closeMobileMenu = () => {
-  isMobileMenuOpen.value = false;
+const toggleLanguage = () => {
+  locale.value = locale.value === 'en' ? 'es' : 'en';
+  localStorage.setItem('language', locale.value);
 };
+
+// Scroll progress + active section tracking
+const sections = ['services', 'incidents', 'playbooks', 'deploy'];
+
+const onScroll = () => {
+  // Progress bar
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  scrollProgress.value = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+  // Active section
+  let current = '';
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 80) current = id;
+    }
+  }
+  activeSection.value = current;
+
+  // Close mobile menu on scroll
+  if (isMobileMenuOpen.value) closeMobileMenu();
+};
+
+onMounted(() => {
+  isDark.value = document.documentElement.classList.contains('dark');
+  window.addEventListener('scroll', onScroll, { passive: true });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll);
+});
 </script>

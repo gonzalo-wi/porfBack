@@ -13,14 +13,15 @@ export default {
       },
       colors: {
         console: {
-          bg: '#0a0e17',
-          surface: '#111827',
-          border: '#1f2937',
+          bg: '#080d16',
+          surface: '#0f1724',
+          border: '#1a2332',
           primary: '#3b82f6',
+          accent: '#06d6a0',
           success: '#10b981',
           warning: '#f59e0b',
           error: '#ef4444',
-          muted: '#6b7280',
+          muted: '#64748b',
         },
       },
       animation: {

@@ -58,8 +58,8 @@
       :class="[
         'p-4 rounded-lg text-sm font-medium',
         submitStatus === 'success'
-          ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
-          : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
+          ? 'bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300'
+          : 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300'
       ]"
     >
       {{ submitMessage }}

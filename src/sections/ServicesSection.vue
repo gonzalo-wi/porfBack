@@ -1,5 +1,5 @@
 <template>
-  <section id="services" class="section-spacing bg-gray-50 dark:bg-console-surface/50">
+  <section id="services" class="section-spacing">
     <div class="section-container">
       <div class="mb-12">
         <SectionHeader>
@@ -10,12 +10,14 @@
         </SectionHeader>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <ProjectCard
-          v-for="project in projects"
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div
+          v-for="(project, index) in projects"
           :key="project.id"
-          :project="project"
-        />
+          v-scroll-reveal="{ delay: index * 80 }"
+        >
+          <ProjectCard :project="project" />
+        </div>
       </div>
     </div>
   </section>

@@ -83,7 +83,7 @@ export const profile: Profile = {
   bio: 'Backend engineer specialized in building reliable APIs, integrations, and automation pipelines. I ship systems with an infra-minded approach—monitoring, logging, and operational excellence built in from day one.',
   stack: ['Java', 'Spring Boot', 'Go', 'Python', 'FastAPI', 'REST APIs', 'SQL', 'Docker'],
   contact: {
-    email: 'gonzalo@example.com',
+    email: 'gonzalo.winazki@gmail.com',
     github: 'https://github.com/gonzalowinazki',
     linkedin: 'https://linkedin.com/in/gonzalowinazki',
   },
